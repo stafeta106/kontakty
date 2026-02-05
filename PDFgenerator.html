@@ -2,7 +2,7 @@
 <html lang="cs">
 <head>
   <meta charset="utf-8">
-  <title>Autocomplete OVM</title>
+  <title>Generátor PDF souborů pro dotazy podle 106/1999</title>
   <style>
     /* jednoduché CSS pro výsledky */
     #results { border: 1px solid #ccc; max-width: 400px; }
@@ -85,13 +85,14 @@
 </head>
 <body>
 
-  <h1>Vyhledávání povinných subjektů</h1>
-  <input id="search" type="text" placeholder="Začni psát název subjektu…" />
+  <h1>1. Vyhledávání povinných subjektů</h1>
+  Zde napiš název subjektu 👉 <input id="search" type="text" placeholder="Začni psát název subjektu…" />
   <div id="results"></div>
   <div id="detail"></div>
 
   <script src="app.js"></script>
 
+<h1>2. Text dotazu</h1>
 
 <div class="editor-wrapper">
   <div class="toolbar">
@@ -102,7 +103,10 @@
 
   <div id="editor" contenteditable="true" spellcheck="true"></div>
 </div>
-<button onclick="makePDF()">Download PDF</button>
+ Jméno a příjmení <input id="jmeno" type="text"/>
+ Datum narození <input id="narozeni" type="text"/>
+ Adresa trvalého bydliště <input id="adresa" type="text"/>
+<button onclick="makePDF()">Ulož jako PDF</button>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -121,7 +125,7 @@ document.querySelectorAll(".toolbar button").forEach(btn => {
 function makePDF() {
 
 const detail = document.getElementById("detail");
-const element = document.getElementById("editor");
+const editor = document.getElementById("editor");
 
 // 1. Create temp container
 const container = document.createElement("div");
@@ -156,7 +160,7 @@ detailClone.style.marginBottom = "20px";
 //const cloneClone = clone.cloneNode(true);
 container.appendChild(clone);
 
-
+//const jmenoClone
 
 // 4. Generate PDF
 html2pdf()
