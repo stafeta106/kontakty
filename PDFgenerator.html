@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <title>Autocomplete OVM</title>
+  <style>
+    /* jednoduché CSS pro výsledky */
+    #results { border: 1px solid #ccc; max-width: 400px; }
+    .result-item { padding: 4px; cursor: pointer; }
+    .result-item:hover { background-color: #eee; }
+    #detail { margin-top: 10px; }
+
+
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    #suggestions { 
+        border: 1px solid #ccc; 
+        max-width: 400px; 
+        display: none; 
+        list-style: none; 
+        padding: 0; 
+        margin: 0; 
+        position: absolute; 
+        background: #fff; 
+        z-index: 1000; 
+    }
+    #suggestions li { padding: 5px; cursor: pointer; }
+    #suggestions li:hover { background-color: #f0f0f0; }
+    .info { 
+        margin-top: 15px; 
+        padding: 10px; 
+        border: 1px solid #ccc; 
+        border-radius: 5px; 
+        font-family: Arial, sans-serif; 
+        font-size: 14px;
+        white-space: pre-line; /* zachová \n jako nové řádky */
+    }
+    #input-container { position: relative; max-width: 400px; }
+    
+    .editor-wrapper {
+  max-width: 600px;
+  font-family: system-ui, sans-serif;
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  gap: 6px;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  background: #f7f7f7;
+}
+
+.toolbar button {
+  padding: 4px 8px;
+  font-size: 14px;
+  border: 1px solid #bbb;
+  background: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.toolbar button:hover {
+  background: #eee;
+}
+
+.toolbar button:active {
+  background: #ddd;
+}
+
+/* Editor */
+#editor {
+  min-height: 200px;   /* ⬅ minimum size */
+  height: auto;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 0 0 6px 6px;
+  overflow: auto;
+  outline: none;
+}
+
+
+  </style>
+</head>
+<body>
+
+  <h1>Vyhledávání povinných subjektů</h1>
+  <input id="search" type="text" placeholder="Začni psát název subjektu…" />
+  <div id="results"></div>
+  <div id="detail"></div>
+
+  <script src="app.js"></script>
+
+
+<div class="editor-wrapper">
+  <div class="toolbar">
+    <button type="button" data-cmd="bold"><b>B</b></button>
+    <button type="button" data-cmd="italic"><i>I</i></button>
+    <button type="button" data-cmd="underline"><u>U</u></button>
+  </div>
+
+  <div id="editor" contenteditable="true" spellcheck="true"></div>
+</div>
+<button onclick="makePDF()">Download PDF</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+
+const editor = document.getElementById("editor");
+
+document.querySelectorAll(".toolbar button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const cmd = btn.dataset.cmd;
+    editor.focus();
+    document.execCommand(cmd, false, null);
+  });
+});
+
+function makePDF() {
+
+const detail = document.getElementById("detail");
+const element = document.getElementById("editor");
+
+// 1. Create temp container
+const container = document.createElement("div");
+container.style.width = element.offsetWidth + "px";
+
+// 2. Clone detail FIRST
+const detailClone = detail.cloneNode(true);
+container.appendChild(detailClone);
+
+// Optional spacing
+detailClone.style.marginBottom = "20px";
+
+// 1. Clone editor
+//editor.style.height = "auto";
+  const clone = editor.cloneNode(true);
+
+  // 2. Expand it so all content is visible
+//  clone.style.height = "auto";
+//  clone.style.maxHeight = "none";
+//  clone.style.overflow = "visible";
+
+  // Optional: match width exactly
+//  clone.style.width = editor.offsetWidth + "px";
+
+  // 3. Hide off-screen
+//  clone.style.position = "absolute";
+//  clone.style.left = "-99999px";
+//  clone.style.top = "0";
+
+//  document.body.appendChild(clone);
+// 3b. Clone element SECOND
+//const cloneClone = clone.cloneNode(true);
+container.appendChild(clone);
+
+
+
+// 4. Generate PDF
+html2pdf()
+  .set({
+    margin: 15,
+    filename: 'document.pdf',
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  })
+  .from(container)
+  .save();
+}
+</script>
+
+
+</body>
