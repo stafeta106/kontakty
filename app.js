@@ -52,6 +52,6 @@ function showDetail(item) {
       ${item.adresa.map(a => `<div>${a}</div>`).join("")}
     </div>
     <div><strong>Datová schránka:</strong> ${item.id}</div>
-    ${item.ico ? `<div><strong>IČO:</strong> ${item.ico}</div>` : ""}
   `;
 }
+
