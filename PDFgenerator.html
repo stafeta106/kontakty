@@ -103,10 +103,11 @@ Sem zkopíruj text dotazu<br>
 
   <div id="editor" contenteditable="true" spellcheck="true"></div>
 </div>
+  3. Vyplň svá osobní data (Budou v hotovém pdf (jinak by úřad neodpověděl), ale 🔏 tahle stránka je nikam neposílá, ani je nesbírá. ⚖️ Důkaz: tahle stránka bude fungovat, i když se teď odpojíš od internetu.)
  Jméno a příjmení 👉 <input id="jmeno" type="text"/><br>
- Datum narození 👉 <input id="narozeni" type="text"/><br>
  Adresa trvalého bydliště 👉 <input id="adresa" type="text"/><br>
-<button onclick="makePDF()">Ulož jako PDF</button>
+ Datum narození 👉 <input id="narozeni" type="text"/><br>
+<button onclick="makePDF()">4. Ulož jako PDF</button>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -141,6 +142,7 @@ detailClone.style.marginBottom = "20px";
 // 1. Clone editor
 //editor.style.height = "auto";
   const editorClone = editor.cloneNode(true);
+  editorClone.style.border = "none";
 
   // 2. Expand it so all content is visible
 //  clone.style.height = "auto";
@@ -161,16 +163,34 @@ detailClone.style.marginBottom = "20px";
 container.appendChild(editorClone);
 
 const   jmeno = document.getElementById("jmeno");
-container.appendChild(jmeno);
+const jmenoClone = jmeno.cloneNode(true);
+jmenoClone.style.border = "none";
+const jmenoRow = document.createElement('div');
+jmenoRow.appendChild(jmenoClone);
+container.appendChild(jmenoRow);
 
-const   narozeni = document.getElementById("narozeni");  
-container.appendChild(narozeni);
+
 
 
 const   adresa = document.getElementById("adresa");  
-container.appendChild(adresa);
+const adresaClone = adresa.cloneNode(true);
+adresaClone.style.border = "none";
+const adresaRow = document.createElement('div');
+adresaRow.appendChild(adresaClone);
 
-//const jmenoClone
+container.appendChild(adresaRow);
+
+
+const   narozeni = document.getElementById("narozeni");  
+const narozeniClone = narozeni.cloneNode(true);
+narozeniClone.style.border = "none";  
+const narozeniRow = document.createElement('div');
+narozeniRow.appendChild(document.createTextNode('Datum narození: '));
+narozeniRow.appendChild(narozeniClone);
+
+container.appendChild(narozeniRow);
+
+
 
 // 4. Generate PDF
 html2pdf()
